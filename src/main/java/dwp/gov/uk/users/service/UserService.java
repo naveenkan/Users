@@ -17,12 +17,15 @@ public class UserService {
 	private RestTemplate restemplate = new RestTemplate();
 
 	public List<User> getLondonUsers() {
-		User[] rp = restemplate.getForObject("https://bpdts-test-app.herokuapp.com/users", User[].class);
-		return Arrays.stream(rp).filter(u ->
+		User[] users = restemplate.getForObject("https://bpdts-test-app.herokuapp.com/users", User[].class);
+		return Arrays.stream(users).filter(u ->
 
 		{
 			double londonLatitude = 51.5345740;
 			double londonLongitude = -0.1141045;
+
+			// Using net.sf.geographiclib.Geodesic inverse method to calculate the distance
+			// by latitude&longitude
 			GeodesicData result = Geodesic.WGS84.Inverse(londonLatitude, londonLongitude, u.getLatitude(),
 					u.getLongitude());
 			double distanceInMeters = result.s12;
